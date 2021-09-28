@@ -1,0 +1,54 @@
+---
+title: "cognitivebiases"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(estimatr)
+library(DescTools)
+```
+```{r}
+bias_data <- read_csv("bias_data.csv")
+```
+
+```{r}
+bias_data %>% 
+  ggplot(aes(x = cab)) +
+  geom_histogram(fill = "blue") +
+  geom_vline(aes(xintercept = .8), col = "red") +
+  labs(x = "Probability the cab is blue", y = "Count", title = "Taxi Cab Responses", 
+       caption = "The red line displays the most common answer in previous iterations of the exeriment: .8.")
+
+mean(bias_data$cab, na.rm = T)
+
+```
+
+```{r}
+meanbias = mean(bias_data$cab, na.rm = T)
+
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+
+bias_data %>%
+  group_by(college_stats) %>%
+  Mode(cab)
+
+#bias_data %>% 
+#  ggplot(aes(x = cab)) +
+#  geom_histogram(bins = 30, fill = "blue") +
+#  facet_wrap(~ college_stats) 
+
+  #geom_vline(aes(xintercept = .8), col = "red") +
+  #labs(x = "Probability the cab is blue ", y = "Count", title = "Taxi Cab Responses", 
+     #  caption = "The red line displays the most common answer in previous iterations of the exeriment: .8.")
+
+```
+
