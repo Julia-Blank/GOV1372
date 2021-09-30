@@ -46,18 +46,12 @@ Once again, the .Rmd version of this file has code you can use to load the data.
 ```{r faces, include=FALSE}
 # remember to use the correct file name
 marriage_data <- read_csv("Sep23ClassData_clean.csv")
-glimpse(marriage_data)
-View(marriage_data)
 ```
 
 These data are *not* the raw output from the survey you took. In particular, all of the indicator variables are the result of coding decisions and data processing done by the instructors (based on the procedures used in Klar et al. (2018)). For the first few questions, just open up the data and take a look at it (ask us if you need help viewing the data in spreadsheet format in RStudio).
 
 ## Question 1
 **How were the \texttt{inPartyHappy} and \texttt{outPartyUnhappy} variables defined? Does this seem like a reasonable procedure? Do you notice any missing values? Why are they missing? How might the missing data affect researchers' inferences?**
-
-```{r}
-#The variable \texttt{inPartyHappy} is an indicator varriable that demonstrates whether a respondent would be happy if their child married a member of their own party and \texttt{outPartyUnhappy} is an indicator varriable that demonstrates whether a respondent would be unhappy if their child married a member of the opposite party to their own. These variables are of type logical, which means they functions as a true or false. I think this is a reasonable procedure as they are pretty much yes or no answers. There are missing values for people who don't seem to identify with a major political party. This might affect the researchers' inferences as most of the moderates data isn't represented or counted so the inferences may be more polarized as a result. 
-```
 
 
 ## Question 2
@@ -71,7 +65,7 @@ Now let's take a look at if there are differences in some of the key outcome var
 ```{r}
 ggplot(data = marriage_data %>% filter(is.na(outPartyUnhappy)==FALSE)) + 
   geom_bar(mapping = aes(x = outPartyUnhappy, y = ..prop.., group = 1), stat = "count") + 
-  facet_wrap(~treatment) +  ylab("Proportion") + xlab("Unhappy with Out-Party Marriage")
+  facet_wrap(~treatment) + ylab("Proportion") + xlab("Unhappy with Out-Party Marriage")
 ```
 
 ## Question 3
@@ -81,11 +75,6 @@ ggplot(data = marriage_data %>% filter(is.na(outPartyUnhappy)==FALSE)) +
 ## Question 4
 **Did the different treatment conditions affect the proportions of people who were affectively polarized? Make a plot and explain what you found.**
 
-```{r}
-ggplot(data = marriage_data %>% filter(is.na(polarized)==FALSE)) + 
-  geom_bar(mapping = aes(x = polarized, y = ..prop.., group = 1), stat = "count") + 
-  facet_wrap(~treatment) +  ylab("Proportion") + xlab("Unhappy with Out-Party Marriage")
-```
 
 ## Question 5
 **Take a quick look at Figure 1 and Figure 2 in [Klar et al. (2018)](https://academic.oup.com/poq/article-abstract/82/2/379/4996003). How do the results from our in-class data compare to their results? What might explain any differences? If there aren't an notable differences, is there a common pattern across the two datasets that is puzzling? What hypothesis do you have to explain it.**
@@ -94,25 +83,10 @@ ggplot(data = marriage_data %>% filter(is.na(polarized)==FALSE)) +
 ## Question 6 (Data Science Question)
 **We might also be interested in if things looked different for weak vs. strong partisans. Pick one of the two outcome variables you just examined and make a plot that would help us understand if responses within and across treatment groups differ between weak and strong partisans.**
 
-```{r}
-strongDEM.labs<- c("Not a Strong Democrat", "Strong Democrat")
-names(strongDEM.labs) <- c("FALSE", "TRUE")
-marriage_data %>%
-  filter(is.na(outPartyUnhappy)==FALSE) %>%
-  filter(pid3 == "Democrat") %>%
-  ggplot(aes(x = outPartyUnhappy, y = ..prop.., group = 1)) +
-  geom_bar(fill = "blue") +
-  facet_wrap(~ strongDEM, labeller = labeller(strongDEM = strongDEM.labs)) +
-  ylab("Proportion") + xlab("Unhappy with Out-Party Marriage") 
-
-  
-```
-
 
 
 ## Question 7
 **Are there any other issues you can think of that might confound the utility of the marriage question as a measure of affective polarization? If you have any concerns, how might you design a study to evaluate your hypotheses?**
-
 
 
 ## Question 8
