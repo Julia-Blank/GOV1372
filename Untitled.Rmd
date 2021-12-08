@@ -1,0 +1,54 @@
+---
+title: "output"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+```{r}
+library(tidyverse)
+library(estimatr)
+library(haven)
+library(stargazer)
+library(stringr)
+
+
+```
+
+```{r}
+output <- read_csv("output.csv")
+
+```
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(output)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+output %>%
+  mutate(year_2015 = case_when(str_detect(date,'2015') ~ 1, TRUE ~ 0)) %>%
+  mutate(political = case_when(str_detect(tag,'Politics') ~ 1, TRUE ~ 0),
+         poli_my_life = case_when(str_detect(tag, c('My Life')) ~ 1, TRUE ~ 0)) %>%
+  filter(year_2015 == 1) %>%
+  group_by(political)%>%
+  count()
+
+prop_political = 6/(67+6)
+prop political ()
+
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
