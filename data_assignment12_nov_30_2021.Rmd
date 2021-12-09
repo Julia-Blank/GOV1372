@@ -159,17 +159,47 @@ model1<-lm(active_confront_police ~ covid_burden, covid_data)
 model2<-lm(active_protect_property ~ covid_burden, covid_data)
 model3 <- lm(active_destroy_property ~ covid_burden, covid_data)
 
-covid_data %>%
-
-
 stargazer(model1 , type = "text")
 stargazer(model2, type = "text")
 stargazer(model3, type = "text")
+stargazer(model4, type = "text")
 
 
 ```
 ```{r}
-#effect_plot(model3, pred = displ, interval = TRUE)
+#library('effects')
+#effectPlot(model3, pred = displ, interval = TRUE)
+model4 <- lm(active_destroy_property ~ covid_burden + gender, covid_data, na.action = 'na.exclude')
+
+col_4_pred0 <- data.frame(covid_burden = seq(1,7,1), gender = 0)
+col_4_pred1 <- data.frame(covid_burden = seq(1,7,1), gender = 1)
+
+model_cols <- bind_rows(col_4_pred0, col_4_pred1)
+
+model4_pred <- predict(model4, model_cols, se.fit=TRUE)
+#model_df <- data.frame(values = model4_pred$fit, error = model4_pred$se.fit, covid_burden = model_cols$covid_burden, gender = model_cols$gender)
+
+model_df <- model_cols %>%
+  mutate(values = model4_pred$fit, 
+         error = model4_pred$se.fit, 
+         upper_error = values + 1.96*error, 
+         lower_error = values - 1.96*error)
+
+#(0 = female, 1 = male)
+model_df %>%
+  ggplot(aes(x=covid_burden, y = values)) + 
+  geom_line(color = "blue") +
+  geom_line(aes(y = upper_error), color = "green", linetype = "dashed") +
+  geom_line(aes(y = lower_error), color = "green", linetype = "dashed") +
+  facet_wrap(~gender) +
+  labs(title = 'Predicted Probabilities of Property Destruction as a function of Covid Burden',
+        x = 'Covid Burden',
+        y = 'Predicted Probabilities of Destroying Property',
+       subtitle = 'Green lines represent 95% confidence intervals and blue the prediction. 0 is female,1 is male')
+
+
+```
+```{r}
 
 ```
 
